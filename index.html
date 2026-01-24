@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qazaq AI — Твой AI-помощник</title>
-    <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qazaq AI — Твой AI-помощник</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-    <!-- Particle Animation Background -->
-    <div class="particles-container">
-        <canvas id="particlesCanvas"></canvas>
-    </div>
+<!-- Particle Animation Background -->
+<div class="particles-container">
+  <canvas id="particlesCanvas"></canvas>
+</div>
 
-    <!-- Kazakh Ornaments Background -->
-    <div class="ornament-bg">
-        <div class="ornament ornament-1"></div>
-        <div class="ornament ornament-2"></div>
-        <div class="ornament ornament-3"></div>
-        <div class="ornament ornament-4"></div>
-    </div>
+<!-- Kazakh Ornaments Background -->
+<div class="ornament-bg">
+  <div class="ornament ornament-1"></div>
+  <div class="ornament ornament-2"></div>
+  <div class="ornament ornament-3"></div>
+  <div class="ornament ornament-4"></div>
+</div>
 
-    <header class="topbar">
-        <div class="logo-container">
-            <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<header class="topbar">
+  <div class="logo-container">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="20" cy="20" r="18" fill="url(#gold-gradient)" opacity="0.3"/>
         <path d="M20 5 L28 15 L35 20 L28 25 L20 35 L12 25 L5 20 L12 15 Z" fill="url(#gold-gradient)"/>
         <circle cx="20" cy="20" r="6" fill="#0A3D62"/>
@@ -38,380 +36,385 @@
           </linearGradient>
         </defs>
       </svg>
-                <span class="logo-text">Qazaq<span class="logo-highlight">AI</span></span>
-            </div>
-            <div class="status-indicator">
-                <span class="status-dot"></span> Онлайн
-            </div>
+      <span class="logo-text">Qazaq<span class="logo-highlight">AI</span></span>
+    </div>
+    <div class="status-indicator">
+      <span class="status-dot"></span>
+      Онлайн
+    </div>
+  </div>
+  
+  <div class="header-stats">
+    <div class="stat-mini">
+      <span class="stat-icon">🔥</span>
+      <div>
+        <div class="stat-value" id="streakCount">0</div>
+        <div class="stat-name">дней подряд</div>
+      </div>
+    </div>
+    <div class="stat-mini">
+      <span class="stat-icon">⭐</span>
+      <div>
+        <div class="stat-value" id="pointsCount">0</div>
+        <div class="stat-name">очков</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tagline-container">
+    <div class="tagline">AI-помощник для изучения казахского языка</div>
+    <div class="flag-decoration">🇰🇿</div>
+  </div>
+</header>
+
+<main class="app">
+  <section class="chat-section">
+    <div class="welcome-banner" id="welcomeBanner">
+      <div class="welcome-header">
+        <h2>Сәлеметсіз бе! 👋</h2>
+        <p>Добро пожаловать в Qazaq AI — твоего личного помощника в изучении казахского языка</p>
+      </div>
+      
+      <div class="welcome-cards">
+        <div class="welcome-card" onclick="quick('Научи меня приветствиям на казахском')">
+          <div class="card-icon">👋</div>
+          <div class="card-title">Приветствия</div>
+          <div class="card-subtitle">Базовые фразы</div>
         </div>
-
-        <div class="header-stats">
-            <div class="stat-mini">
-                <span class="stat-icon">🔥</span>
-                <div>
-                    <div class="stat-value" id="streakCount">0</div>
-                    <div class="stat-name">дней подряд</div>
-                </div>
-            </div>
-            <div class="stat-mini">
-                <span class="stat-icon">⭐</span>
-                <div>
-                    <div class="stat-value" id="pointsCount">0</div>
-                    <div class="stat-name">очков</div>
-                </div>
-            </div>
+        <div class="welcome-card" onclick="quick('Расскажи о казахских традициях')">
+          <div class="card-icon">🏛️</div>
+          <div class="card-title">Традиции</div>
+          <div class="card-subtitle">Культура народа</div>
         </div>
-
-        <div class="tagline-container">
-            <div class="tagline">AI-помощник для изучения казахского языка</div>
-            <div class="flag-decoration">🇰🇿</div>
+        <div class="welcome-card" onclick="quick('Дай базовые фразы для начинающих')">
+          <div class="card-icon">📖</div>
+          <div class="card-title">Базовые фразы</div>
+          <div class="card-subtitle">Для новичков</div>
         </div>
-    </header>
-
-    <main class="app">
-        <section class="chat-section">
-            <div class="welcome-banner" id="welcomeBanner">
-                <div class="welcome-header">
-                    <h2>Сәлеметсіз бе! 👋</h2>
-                    <p>Добро пожаловать в Qazaq AI — твоего личного помощника в изучении казахского языка</p>
-                </div>
-
-                <div class="welcome-cards">
-                    <div class="welcome-card" onclick="quick('Научи меня приветствиям на казахском')">
-                        <div class="card-icon">👋</div>
-                        <div class="card-title">Приветствия</div>
-                        <div class="card-subtitle">Базовые фразы</div>
-                    </div>
-                    <div class="welcome-card" onclick="quick('Расскажи о казахских традициях')">
-                        <div class="card-icon">🏛️</div>
-                        <div class="card-title">Традиции</div>
-                        <div class="card-subtitle">Культура народа</div>
-                    </div>
-                    <div class="welcome-card" onclick="quick('Дай базовые фразы для начинающих')">
-                        <div class="card-icon">📖</div>
-                        <div class="card-title">Базовые фразы</div>
-                        <div class="card-subtitle">Для новичков</div>
-                    </div>
-                    <div class="welcome-card" onclick="quick('Расскажи про казахский алфавит')">
-                        <div class="card-icon">🔤</div>
-                        <div class="card-title">Алфавит</div>
-                        <div class="card-subtitle">42 буквы</div>
-                    </div>
-                </div>
-
-                <div class="daily-challenge">
-                    <div class="challenge-header">
-                        <span class="challenge-icon">🎯</span>
-                        <span class="challenge-title">Фраза дня</span>
-                    </div>
-                    <div class="challenge-content">
-                        <div class="phrase-kz">Рақмет сізге!</div>
-                        <div class="phrase-ru">Спасибо вам!</div>
-                        <button class="practice-btn" onclick="quick('Дай мне примеры использования фразы: Рақмет сізге')">
+        <div class="welcome-card" onclick="quick('Расскажи про казахский алфавит')">
+          <div class="card-icon">🔤</div>
+          <div class="card-title">Алфавит</div>
+          <div class="card-subtitle">42 буквы</div>
+        </div>
+      </div>
+      
+      <div class="daily-challenge">
+        <div class="challenge-header">
+          <span class="challenge-icon">🎯</span>
+          <span class="challenge-title">Фраза дня</span>
+        </div>
+        <div class="challenge-content">
+          <div class="phrase-kz">Оқу — білім бұлағы, Білім — өнер шырағы</div>
+          <div class="phrase-ru">Учение — источник знания, Знание — светоч искусства</div>
+          <button class="practice-btn" onclick="quick('Дай мне примеры использования фразы: Оқу — білім бұлағы, Білім — өнер шырағы')">
             <span>Практиковать</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-                    </div>
-                </div>
-            </div>
+        </div>
+      </div>
+    </div>
 
-            <div id="chat" class="chat"></div>
+    <div id="chat" class="chat"></div>
 
-            <div class="input-area">
-                <div class="learning-tips" id="learningTips">
-                    <div class="tip-carousel">
-                        <div class="tip-item active">
-                            <span class="tip-icon">💡</span>
-                            <span class="tip-text">Совет: Используйте "Переведи" для быстрого перевода</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-wrapper">
-                    <button class="voice-btn" onclick="toggleVoiceInput()" title="Голосовой ввод">
+    <div class="input-area">
+      <div class="learning-tips" id="learningTips">
+        <div class="tip-carousel">
+          <div class="tip-item active">
+            <span class="tip-icon">💡</span>
+            <span class="tip-text">Совет: Используйте "Переведи" для быстрого перевода</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="input-wrapper">
+        <button class="voice-btn" onclick="toggleVoiceInput()" title="Голосовой ввод">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="2"/>
             <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
-
-                    <input id="message" placeholder="Напиши сообщение на русском или казахском языке..." onkeypress="handleKeyPress(event)" oninput="handleInput()" />
-
-                    <div class="input-suggestions" id="inputSuggestions"></div>
-
-                    <button class="emoji-btn" onclick="toggleEmojiPicker()" title="Эмодзи">
+        
+        <input 
+          id="message" 
+          placeholder="Напиши сообщение на русском или казахском языке..." 
+          onkeypress="handleKeyPress(event)"
+          oninput="handleInput()"
+        />
+        
+        <div class="input-suggestions" id="inputSuggestions"></div>
+        
+        <button class="emoji-btn" onclick="toggleEmojiPicker()" title="Эмодзи">
           <span>😊</span>
         </button>
-
-                    <button class="send-btn" onclick="sendMessage()">
+        
+        <button class="send-btn" onclick="sendMessage()">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-                </div>
-            </div>
-        </section>
+      </div>
+    </div>
+  </section>
 
-        <aside class="side-panel">
-            <!-- Learning Progress -->
-            <div class="progress-section">
-                <div class="section-header">
-                    <h3>📈 Твой прогресс</h3>
-                    <button class="expand-btn" onclick="toggleSection('progress')">
+  <aside class="side-panel">
+    <!-- Learning Progress -->
+    <div class="progress-section">
+      <div class="section-header">
+        <h3>📈 Твой прогресс</h3>
+        <button class="expand-btn" onclick="toggleSection('progress')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
-                </div>
-                <div class="section-content" id="progress">
-                    <div class="progress-card">
-                        <div class="progress-header">
-                            <span>Уровень владения</span>
-                            <span class="level-badge">A1</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 35%"></div>
-                        </div>
-                        <div class="progress-stats">
-                            <div class="stat-item">
-                                <div class="stat-number" id="messageCount">0</div>
-                                <div class="stat-label">сообщений</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-number" id="wordsLearned">0</div>
-                                <div class="stat-label">слов изучено</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      </div>
+      <div class="section-content" id="progress">
+        <div class="progress-card">
+          <div class="progress-header">
+            <span>Уровень владения</span>
+            <span class="level-badge">A1</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 35%"></div>
+          </div>
+          <div class="progress-stats">
+            <div class="stat-item">
+              <div class="stat-number" id="messageCount">0</div>
+              <div class="stat-label">сообщений</div>
             </div>
+            <div class="stat-item">
+              <div class="stat-number" id="wordsLearned">0</div>
+              <div class="stat-label">слов изучено</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <div class="divider"></div>
+    <div class="divider"></div>
 
-            <!-- Quick Actions -->
-            <div class="actions-section">
-                <div class="section-header">
-                    <h3>⚡ Быстрые действия</h3>
-                </div>
-                <div class="quick-actions">
-                    <button class="action-btn primary" onclick="quickTranslate()">
+    <!-- Quick Actions -->
+    <div class="actions-section">
+      <div class="section-header">
+        <h3>⚡ Быстрые действия</h3>
+      </div>
+      <div class="quick-actions">
+        <button class="action-btn primary" onclick="quickTranslate()">
           <span class="btn-icon">🔄</span>
           <span class="btn-text">Перевод</span>
           <span class="btn-badge">Ctrl+T</span>
         </button>
-                    <button class="action-btn secondary" onclick="quick('Объясни это слово', false)">
+        <button class="action-btn secondary" onclick="quick('Объясни это слово', false)">
           <span class="btn-icon">📚</span>
           <span class="btn-text">Словарь</span>
         </button>
-                    <button class="action-btn tertiary" onclick="quick('Дай пример предложения', false)">
+        <button class="action-btn tertiary" onclick="quick('Дай пример предложения', false)">
           <span class="btn-icon">✍️</span>
           <span class="btn-text">Примеры</span>
         </button>
-                    <button class="action-btn quaternary" onclick="quick('Проверь мой текст на казахском: ', false)">
+        <button class="action-btn quaternary" onclick="quick('Проверь мой текст на казахском: ', false)">
           <span class="btn-icon">✓</span>
           <span class="btn-text">Проверка</span>
         </button>
-                </div>
-            </div>
+      </div>
+    </div>
 
-            <div class="divider"></div>
+    <div class="divider"></div>
 
-            <!-- Word of the Day -->
-            <div class="word-section">
-                <div class="section-header">
-                    <h3>📝 Слово дня</h3>
-                </div>
-                <div class="word-card">
-                    <div class="word-main">
-                        <div class="word-kz">Достық</div>
-                        <div class="word-transcription">[dostɯq]</div>
-                    </div>
-                    <div class="word-translation">Дружба</div>
-                    <div class="word-example">
-                        <div class="example-kz">Достық — өмірдің маңызды бөлігі</div>
-                        <div class="example-ru">Дружба — важная часть жизни</div>
-                    </div>
-                    <button class="save-word-btn" onclick="saveWord('Достық')">
+    <!-- Word of the Day -->
+    <div class="word-section">
+      <div class="section-header">
+        <h3>📝 Слово дня</h3>
+      </div>
+      <div class="word-card">
+        <div class="word-main">
+          <div class="word-kz">Достық</div>
+          <div class="word-transcription">[dostɯq]</div>
+        </div>
+        <div class="word-translation">Дружба</div>
+        <div class="word-example">
+          <div class="example-kz">Достық — өмірдің маңызды бөлігі</div>
+          <div class="example-ru">Дружба — важная часть жизни</div>
+        </div>
+        <button class="save-word-btn" onclick="saveWord('Достық')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           Сохранить
         </button>
-                </div>
-            </div>
+      </div>
+    </div>
 
-            <div class="divider"></div>
+    <div class="divider"></div>
 
-            <!-- Culture Section -->
-            <div class="culture-section">
-                <div class="section-header">
-                    <h3>🎨 Культура</h3>
-                </div>
-                <div class="culture-quote">
-                    <div class="quote-mark">«</div>
-                    <div class="quote-text">
-                        <p class="kazakh">Тіл — ұлттың жаны</p>
-                        <p class="russian">Язык — душа нации</p>
-                    </div>
-                    <div class="quote-mark closing">»</div>
-                </div>
+    <!-- Culture Section -->
+    <div class="culture-section">
+      <div class="section-header">
+        <h3>🎨 Культура</h3>
+      </div>
+      <div class="culture-quote">
+        <div class="quote-mark">«</div>
+        <div class="quote-text">
+          <p class="kazakh">Тіл — ұлттың жаны</p>
+          <p class="russian">Язык — душа нации</p>
+        </div>
+        <div class="quote-mark closing">»</div>
+      </div>
+      
+      <div class="cultural-tips">
+        <div class="tip-item" onclick="quick('Расскажи про казахский алфавит')">
+          <span class="tip-icon">🔤</span>
+          <span>Алфавит</span>
+        </div>
+        <div class="tip-item" onclick="quick('Какие есть казахские праздники?')">
+          <span class="tip-icon">🎉</span>
+          <span>Праздники</span>
+        </div>
+        <div class="tip-item" onclick="quick('Расскажи про казахскую кухню')">
+          <span class="tip-icon">🍲</span>
+          <span>Кухня</span>
+        </div>
+        <div class="tip-item" onclick="quick('Расскажи о казахских музыкальных инструментах')">
+          <span class="tip-icon">🎵</span>
+          <span>Музыка</span>
+        </div>
+      </div>
+    </div>
 
-                <div class="cultural-tips">
-                    <div class="tip-item" onclick="quick('Расскажи про казахский алфавит')">
-                        <span class="tip-icon">🔤</span>
-                        <span>Алфавит</span>
-                    </div>
-                    <div class="tip-item" onclick="quick('Какие есть казахские праздники?')">
-                        <span class="tip-icon">🎉</span>
-                        <span>Праздники</span>
-                    </div>
-                    <div class="tip-item" onclick="quick('Расскажи про казахскую кухню')">
-                        <span class="tip-icon">🍲</span>
-                        <span>Кухня</span>
-                    </div>
-                    <div class="tip-item" onclick="quick('Расскажи о казахских музыкальных инструментах')">
-                        <span class="tip-icon">🎵</span>
-                        <span>Музыка</span>
-                    </div>
-                </div>
-            </div>
+    <div class="divider"></div>
 
-            <div class="divider"></div>
+    <!-- Achievements -->
+    <div class="achievements-section">
+      <div class="section-header">
+        <h3>🏆 Достижения</h3>
+      </div>
+      <div class="achievements-grid">
+        <div class="achievement-badge unlocked" title="Первое сообщение">
+          <div class="badge-icon">🌟</div>
+          <div class="badge-name">Новичок</div>
+        </div>
+        <div class="achievement-badge locked" title="10 сообщений">
+          <div class="badge-icon">🔥</div>
+          <div class="badge-name">Энтузиаст</div>
+        </div>
+        <div class="achievement-badge locked" title="50 слов изучено">
+          <div class="badge-icon">📚</div>
+          <div class="badge-name">Студент</div>
+        </div>
+        <div class="achievement-badge locked" title="7 дней подряд">
+          <div class="badge-icon">⭐</div>
+          <div class="badge-name">Регуляр</div>
+        </div>
+      </div>
+    </div>
 
-            <!-- Achievements -->
-            <div class="achievements-section">
-                <div class="section-header">
-                    <h3>🏆 Достижения</h3>
-                </div>
-                <div class="achievements-grid">
-                    <div class="achievement-badge unlocked" title="Первое сообщение">
-                        <div class="badge-icon">🌟</div>
-                        <div class="badge-name">Новичок</div>
-                    </div>
-                    <div class="achievement-badge locked" title="10 сообщений">
-                        <div class="badge-icon">🔥</div>
-                        <div class="badge-name">Энтузиаст</div>
-                    </div>
-                    <div class="achievement-badge locked" title="50 слов изучено">
-                        <div class="badge-icon">📚</div>
-                        <div class="badge-name">Студент</div>
-                    </div>
-                    <div class="achievement-badge locked" title="7 дней подряд">
-                        <div class="badge-icon">⭐</div>
-                        <div class="badge-name">Регуляр</div>
-                    </div>
-                </div>
-            </div>
+    <div class="divider"></div>
 
-            <div class="divider"></div>
-
-            <!-- Quick Guide -->
-            <div class="guide-section">
-                <div class="section-header">
-                    <h3>📖 Инструкция</h3>
-                    <button class="expand-btn" onclick="toggleSection('guide')">
+    <!-- Quick Guide -->
+    <div class="guide-section">
+      <div class="section-header">
+        <h3>📖 Инструкция</h3>
+        <button class="expand-btn" onclick="toggleSection('guide')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
-                </div>
-                <div class="section-content" id="guide">
-                    <div class="guide-card">
-                        <div class="guide-item">
-                            <span class="guide-number">1</span>
-                            <div class="guide-text">
-                                <strong>Быстрые кнопки:</strong> Используйте кнопки справа для быстрых действий
-                            </div>
-                        </div>
-                        <div class="guide-item">
-                            <span class="guide-number">2</span>
-                            <div class="guide-text">
-                                <strong>Горячие клавиши:</strong> Ctrl+T (перевод), Ctrl+D (словарь)
-                            </div>
-                        </div>
-                        <div class="guide-item">
-                            <span class="guide-number">3</span>
-                            <div class="guide-text">
-                                <strong>Голос и эмодзи:</strong> Кнопки слева от поля ввода
-                            </div>
-                        </div>
-                        <div class="guide-item">
-                            <span class="guide-number">4</span>
-                            <div class="guide-text">
-                                <strong>Сохранение слов:</strong> Нажмите "Сохранить" на карточке слова дня
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      </div>
+      <div class="section-content" id="guide">
+        <div class="guide-card">
+          <div class="guide-item">
+            <span class="guide-number">1</span>
+            <div class="guide-text">
+              <strong>Быстрые кнопки:</strong> Используйте кнопки справа для быстрых действий
             </div>
-
-            <div class="divider"></div>
-
-            <!-- About Section -->
-            <div class="about-section">
-                <div class="section-header">
-                    <h3>ℹ️ О проекте</h3>
-                </div>
-                <div class="about-card">
-                    <div class="about-logo">🇰🇿</div>
-                    <h4 class="about-title">Qazaq AI</h4>
-                    <p class="about-description">
-                        Интеллектуальный помощник для изучения казахского языка, созданный с использованием современных AI технологий.
-                    </p>
-                    <div class="about-divider"></div>
-                    <div class="creators-section">
-                        <div class="creators-title">👨‍💻 Создатели проекта:</div>
-                        <div class="creator-item">
-                            <span class="creator-icon">🎓</span>
-                            <div class="creator-info">
-                                <div class="creator-name">Olzhas Kolzhabay</div>
-                                <div class="creator-role">Astana IT University</div>
-                            </div>
-                        </div>
-                        <div class="creator-item">
-                            <span class="creator-icon">🎓</span>
-                            <div class="creator-info">
-                                <div class="creator-name">Ali Galimzhanov</div>
-                                <div class="creator-role">Astana IT University</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="about-footer">
-                        <span class="about-year">2026</span>
-                        <span class="about-separator">•</span>
-                        <span class="about-uni">AITU</span>
-                    </div>
-                </div>
+          </div>
+          <div class="guide-item">
+            <span class="guide-number">2</span>
+            <div class="guide-text">
+              <strong>Горячие клавиши:</strong> Ctrl+T (перевод), Ctrl+D (словарь)
             </div>
-        </aside>
-    </main>
-
-    <!-- Settings Modal -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>⚙️ Настройки</h3>
-                <button class="close-btn" onclick="closeModal()">×</button>
+          </div>
+          <div class="guide-item">
+            <span class="guide-number">3</span>
+            <div class="guide-text">
+              <strong>Голос и эмодзи:</strong> Кнопки слева от поля ввода
             </div>
-            <div class="modal-body">
-                <div class="setting-item">
-                    <label>Тема оформления</label>
-                    <select>
+          </div>
+          <div class="guide-item">
+            <span class="guide-number">4</span>
+            <div class="guide-text">
+              <strong>Сохранение слов:</strong> Нажмите "Сохранить" на карточке слова дня
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- About Section -->
+    <div class="about-section">
+      <div class="section-header">
+        <h3>ℹ️ О проекте</h3>
+      </div>
+      <div class="about-card">
+        <div class="about-logo">🇰🇿</div>
+        <h4 class="about-title">Qazaq AI</h4>
+        <p class="about-description">
+          Интеллектуальный помощник для изучения казахского языка, созданный с использованием современных AI технологий.
+        </p>
+        <div class="about-divider"></div>
+        <div class="creators-section">
+          <div class="creators-title">👨‍💻 Создатели проекта:</div>
+          <div class="creator-item">
+            <span class="creator-icon">🎓</span>
+            <div class="creator-info">
+              <div class="creator-name">Olzhas Kolzhabay</div>
+              <div class="creator-role">Astana IT University</div>
+            </div>
+          </div>
+          <div class="creator-item">
+            <span class="creator-icon">🎓</span>
+            <div class="creator-info">
+              <div class="creator-name">Ali Galimzhanov</div>
+              <div class="creator-role">Astana IT University</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-footer">
+          <span class="about-year">2025</span>
+          <span class="about-separator">•</span>
+          <span class="about-uni">AITU</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- Settings Modal -->
+<div class="modal" id="settingsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>⚙️ Настройки</h3>
+      <button class="close-btn" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="setting-item">
+        <label>Тема оформления</label>
+        <select>
           <option>Темная (по умолчанию)</option>
           <option>Светлая</option>
         </select>
-                </div>
-                <div class="setting-item">
-                    <label>Звуковые уведомления</label>
-                    <input type="checkbox" checked>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="setting-item">
+        <label>Звуковые уведомления</label>
+        <input type="checkbox" checked>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
-
 </html>
