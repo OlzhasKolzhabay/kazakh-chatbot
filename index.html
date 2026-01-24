@@ -200,20 +200,20 @@
         <h3>⚡ Быстрые действия</h3>
       </div>
       <div class="quick-actions">
-        <button class="action-btn primary" onclick="quick('Переведи на казахский')">
+        <button class="action-btn primary" onclick="quickTranslate()">
           <span class="btn-icon">🔄</span>
           <span class="btn-text">Перевод</span>
           <span class="btn-badge">Ctrl+T</span>
         </button>
-        <button class="action-btn secondary" onclick="quick('Объясни это слово')">
+        <button class="action-btn secondary" onclick="quick('Объясни это слово', false)">
           <span class="btn-icon">📚</span>
           <span class="btn-text">Словарь</span>
         </button>
-        <button class="action-btn tertiary" onclick="quick('Дай пример предложения')">
+        <button class="action-btn tertiary" onclick="quick('Дай пример предложения', false)">
           <span class="btn-icon">✍️</span>
           <span class="btn-text">Примеры</span>
         </button>
-        <button class="action-btn quaternary" onclick="quick('Проверь мой текст на казахском')">
+        <button class="action-btn quaternary" onclick="quick('Проверь мой текст на казахском: ', false)">
           <span class="btn-icon">✓</span>
           <span class="btn-text">Проверка</span>
         </button>
@@ -305,6 +305,87 @@
         <div class="achievement-badge locked" title="7 дней подряд">
           <div class="badge-icon">⭐</div>
           <div class="badge-name">Регуляр</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Quick Guide -->
+    <div class="guide-section">
+      <div class="section-header">
+        <h3>📖 Инструкция</h3>
+        <button class="expand-btn" onclick="toggleSection('guide')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="section-content" id="guide">
+        <div class="guide-card">
+          <div class="guide-item">
+            <span class="guide-number">1</span>
+            <div class="guide-text">
+              <strong>Быстрые кнопки:</strong> Используйте кнопки справа для быстрых действий
+            </div>
+          </div>
+          <div class="guide-item">
+            <span class="guide-number">2</span>
+            <div class="guide-text">
+              <strong>Горячие клавиши:</strong> Ctrl+T (перевод), Ctrl+D (словарь)
+            </div>
+          </div>
+          <div class="guide-item">
+            <span class="guide-number">3</span>
+            <div class="guide-text">
+              <strong>Голос и эмодзи:</strong> Кнопки слева от поля ввода
+            </div>
+          </div>
+          <div class="guide-item">
+            <span class="guide-number">4</span>
+            <div class="guide-text">
+              <strong>Сохранение слов:</strong> Нажмите "Сохранить" на карточке слова дня
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- About Section -->
+    <div class="about-section">
+      <div class="section-header">
+        <h3>ℹ️ О проекте</h3>
+      </div>
+      <div class="about-card">
+        <div class="about-logo">🇰🇿</div>
+        <h4 class="about-title">Qazaq AI</h4>
+        <p class="about-description">
+          Интеллектуальный помощник для изучения казахского языка, созданный с использованием современных AI технологий.
+        </p>
+        <div class="about-divider"></div>
+        <div class="creators-section">
+          <div class="creators-title">👨‍💻 Создатели проекта:</div>
+          <div class="creator-item">
+            <span class="creator-icon">🎓</span>
+            <div class="creator-info">
+              <div class="creator-name">Olzhas Kolzhabay</div>
+              <div class="creator-role">Astana IT University</div>
+            </div>
+          </div>
+          <div class="creator-item">
+            <span class="creator-icon">🎓</span>
+            <div class="creator-info">
+              <div class="creator-name">Ali Galimzhanov</div>
+              <div class="creator-role">Astana IT University</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-footer">
+          <span class="about-year">2025</span>
+          <span class="about-separator">•</span>
+          <span class="about-uni">AITU</span>
         </div>
       </div>
     </div>

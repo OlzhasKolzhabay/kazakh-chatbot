@@ -1180,6 +1180,185 @@ input::placeholder {
   text-align: center;
 }
 
+/* Guide Section */
+.guide-section {
+  margin-bottom: 25px;
+}
+
+.guide-card {
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  border-radius: 15px;
+  padding: 18px;
+}
+
+.guide-item {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.guide-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.guide-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  background: var(--gradient-gold);
+  color: #000;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 3px 10px rgba(255, 215, 0, 0.4);
+}
+
+.guide-text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-gray);
+  line-height: 1.6;
+}
+
+.guide-text strong {
+  color: var(--text-white);
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+/* About Section */
+.about-section {
+  margin-bottom: 20px;
+}
+
+.about-card {
+  background: linear-gradient(135deg, rgba(10, 61, 98, 0.4) 0%, rgba(21, 34, 56, 0.4) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.about-logo {
+  font-size: 48px;
+  margin-bottom: 15px;
+  animation: pulse 3s infinite;
+}
+
+.about-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-description {
+  font-size: 13px;
+  color: var(--text-gray);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.about-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+  margin: 20px 0;
+}
+
+.creators-section {
+  margin-bottom: 20px;
+}
+
+.creators-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.creator-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.creator-item:hover {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: var(--gold);
+  transform: translateX(5px);
+}
+
+.creator-icon {
+  font-size: 24px;
+}
+
+.creator-info {
+  flex: 1;
+  text-align: left;
+}
+
+.creator-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 3px;
+}
+
+.creator-role {
+  font-size: 12px;
+  color: var(--text-gray);
+  font-style: italic;
+}
+
+.about-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-dark-gray);
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-year {
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.about-separator {
+  color: rgba(255, 215, 0, 0.5);
+}
+
+.about-uni {
+  font-weight: 700;
+  color: var(--light-blue);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 /* ================================
    RESPONSIVE DESIGN
    ================================ */
