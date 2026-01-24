@@ -3,7 +3,9 @@
 // ================================
 
 // Локальный backend
-const API_URL = "http://127.0.0.1:8000/chat";
+// const API_URL = "http://127.0.0.1:8000/chat"; // локально
+const API_URL = "https://kazakh-chatbot-production.up.railway.app/chat";
+
 
 // Для деплоя (когда будет backend в интернете)
 // const API_URL = "https://ТВОЙ_BACKEND_URL/chat";
