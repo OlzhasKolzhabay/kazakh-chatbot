@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qazaq AI — Твой AI-помощник</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Фоновая анимация с казахскими орнаментами -->
+<div class="ornament-bg">
+  <div class="ornament ornament-1"></div>
+  <div class="ornament ornament-2"></div>
+  <div class="ornament ornament-3"></div>
+</div>
+
+<header class="topbar">
+  <div class="logo-container">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" fill="url(#gold-gradient)" opacity="0.3"/>
+        <path d="M20 5 L28 15 L35 20 L28 25 L20 35 L12 25 L5 20 L12 15 Z" fill="url(#gold-gradient)"/>
+        <circle cx="20" cy="20" r="6" fill="#0A3D62"/>
+        <defs>
+          <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#F4D03F;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#C9A227;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="logo-text">Qazaq<span class="logo-highlight">AI</span></span>
+    </div>
+    <div class="status-indicator">
+      <span class="status-dot"></span>
+      Онлайн
+    </div>
+  </div>
+  <div class="tagline-container">
+    <div class="tagline">AI-помощник для изучения казахского языка</div>
+    <div class="flag-decoration">🇰🇿</div>
+  </div>
+</header>
+
+<main class="app">
+  <section class="chat-section">
+    <div class="welcome-banner" id="welcomeBanner">
+      <h2>Сәлеметсіз бе! 👋</h2>
+      <p>Добро пожаловать в Qazaq AI — твоего личного помощника в изучении казахского языка</p>
+      <div class="welcome-cards">
+        <div class="welcome-card" onclick="quick('Научи меня приветствиям на казахском')">
+          <div class="card-icon">👋</div>
+          <div class="card-title">Приветствия</div>
+        </div>
+        <div class="welcome-card" onclick="quick('Расскажи о казахских традициях')">
+          <div class="card-icon">🏛️</div>
+          <div class="card-title">Традиции</div>
+        </div>
+        <div class="welcome-card" onclick="quick('Дай базовые фразы для начинающих')">
+          <div class="card-icon">📖</div>
+          <div class="card-title">Базовые фразы</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="chat" class="chat"></div>
+
+    <div class="input-area">
+      <div class="input-wrapper">
+        <input 
+          id="message" 
+          placeholder="Напиши сообщение на русском или казахском языке..." 
+          onkeypress="handleKeyPress(event)"
+        />
+        <button class="send-btn" onclick="sendMessage()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="side-panel">
+    <div class="panel-header">
+      <h3>⚡ Быстрые действия</h3>
+    </div>
+    
+    <div class="quick-actions">
+      <button class="action-btn primary" onclick="quick('Переведи на казахский')">
+        <span class="btn-icon">🔄</span>
+        <span class="btn-text">Перевод</span>
+      </button>
+      <button class="action-btn secondary" onclick="quick('Объясни это слово')">
+        <span class="btn-icon">📚</span>
+        <span class="btn-text">Словарь</span>
+      </button>
+      <button class="action-btn tertiary" onclick="quick('Дай пример предложения')">
+        <span class="btn-icon">✍️</span>
+        <span class="btn-text">Примеры</span>
+      </button>
+      <button class="action-btn quaternary" onclick="quick('Проверь мой текст на казахском')">
+        <span class="btn-icon">✓</span>
+        <span class="btn-text">Проверка</span>
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="culture-section">
+      <h3>🎨 Культура</h3>
+      <div class="culture-quote">
+        <div class="quote-mark">«</div>
+        <div class="quote-text">
+          <p class="kazakh">Тіл — ұлттың жаны</p>
+          <p class="russian">Язык — душа нации</p>
+        </div>
+        <div class="quote-mark closing">»</div>
+      </div>
+      
+      <div class="cultural-tips">
+        <div class="tip-item" onclick="quick('Расскажи про казахский алфавит')">
+          <span class="tip-icon">🔤</span>
+          <span>Алфавит</span>
+        </div>
+        <div class="tip-item" onclick="quick('Какие есть казахские праздники?')">
+          <span class="tip-icon">🎉</span>
+          <span>Праздники</span>
+        </div>
+        <div class="tip-item" onclick="quick('Расскажи про казахскую кухню')">
+          <span class="tip-icon">🍲</span>
+          <span>Кухня</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stats-section">
+      <h3>📊 Твой прогресс</h3>
+      <div class="stat-card">
+        <div class="stat-number" id="messageCount">0</div>
+        <div class="stat-label">сообщений</div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
