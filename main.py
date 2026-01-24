@@ -19,12 +19,11 @@ SYSTEM_PROMPT = """
 - Пиши ТОЛЬКО обычным текстом
 - НЕ используй markdown
 - НЕ используй **жирный текст**
-- НЕ используй ###, списки, заголовки
+- НЕ используй списки, заголовки
 - НЕ используй эмодзи
-- НЕ пиши длинные вступления
 - НЕ представляйся
 
-СТИЛЬ ОТВЕТА:
+СТИЛЬ:
 - Коротко
 - Понятно
 - Как в живом чате
@@ -32,12 +31,9 @@ SYSTEM_PROMPT = """
 
 СОДЕРЖАНИЕ:
 - Только изучение казахского языка
-- Можно приводить пример + перевод
-- Если вопрос не про язык — вежливо верни к теме
-
-Отвечай сразу по сути вопроса.
+- Пример + перевод допустимы
+- Если вопрос не по теме — мягко верни к языку
 """
-
 
 @app.get("/health")
 def health():
@@ -45,25 +41,33 @@ def health():
 
 @app.post("/chat")
 def chat(data: dict):
-    user_message = data.get("message", "").strip()
+    try:
+        user_message = data.get("message", "").strip()
+        if not user_message:
+            return {"reply": "Пожалуйста, напишите сообщение."}
 
-    if not user_message:
-        return {"reply": "Пожалуйста, напишите вопрос."}
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return {"reply": "Ошибка сервера: API ключ не найден."}
 
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        genai.configure(api_key=api_key)
 
-    model = genai.GenerativeModel(
-        "models/gemini-flash-latest",
-        generation_config={
-            "temperature": 0.3,
-            "max_output_tokens": 220
-        }
-    )
+        model = genai.GenerativeModel(
+            "models/gemini-flash-latest",
+            generation_config={
+                "temperature": 0.3,
+                "max_output_tokens": 150
+            }
+        )
 
-    prompt = f"{SYSTEM_PROMPT}\n\nСообщение ученика: {user_message}"
+        prompt = f"{SYSTEM_PROMPT}\n\nСообщение ученика: {user_message}"
+        response = model.generate_content(prompt)
 
-    response = model.generate_content(prompt)
+        if not response or not response.text:
+            return {"reply": "Не удалось получить ответ. Попробуйте ещё раз."}
 
-    return {
-        "reply": response.text.strip()
-    }
+        return {"reply": response.text.strip()}
+
+    except Exception as e:
+        print("CHAT ERROR:", e)
+        return {"reply": "Внутренняя ошибка сервера. Попробуйте позже."}
