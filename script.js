@@ -14,6 +14,20 @@ let messageCount = 0;
 let wordsLearned = 0;
 let streakCount = 0;
 let pointsCount = 0;
+let currentXP = 0;
+let dailyGoal = 50;
+let voiceUsed = false;
+
+// Quest tracking
+let questProgress = {
+    messages: 0,
+    voiceUsed: false,
+    wordsLearned: 0
+};
+
+// Voice recognition
+let recognition = null;
+let isListening = false;
 
 // ================================
 // PARTICLE ANIMATION
@@ -98,6 +112,303 @@ function initParticles() {
 }
 
 // ================================
+// VOICE RECOGNITION (NEW!)
+// ================================
+
+function initVoiceRecognition() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        console.warn('Speech recognition not supported');
+        return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    
+    // Get selected language
+    const langSelect = document.getElementById('voiceLangSelect');
+    const selectedLang = langSelect ? langSelect.value : 'ru-RU';
+    
+    recognition.lang = selectedLang === 'auto' ? 'ru-RU' : selectedLang;
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+        isListening = true;
+        showVoiceStatus();
+        const voiceBtn = document.getElementById('voiceBtn');
+        voiceBtn.classList.add('listening');
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join('');
+
+        document.getElementById('message').value = transcript;
+        
+        // Update voice status text
+        const voiceText = document.querySelector('.voice-text');
+        if (voiceText) {
+            voiceText.textContent = transcript || 'Слушаю...';
+        }
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        hideVoiceStatus();
+        const voiceBtn = document.getElementById('voiceBtn');
+        voiceBtn.classList.remove('listening');
+        isListening = false;
+        
+        if (event.error === 'not-allowed') {
+            showNotification('❌ Разрешите доступ к микрофону', 'error');
+        } else if (event.error !== 'no-speech') {
+            showNotification('❌ Ошибка распознавания речи', 'error');
+        }
+    };
+
+    recognition.onend = () => {
+        hideVoiceStatus();
+        const voiceBtn = document.getElementById('voiceBtn');
+        voiceBtn.classList.remove('listening');
+        isListening = false;
+        
+        // Track voice usage for quest
+        if (!voiceUsed) {
+            voiceUsed = true;
+            questProgress.voiceUsed = true;
+            updateQuests();
+            // Unlock speaker achievement
+            unlockAchievement('badge-speaker', 'Оратор', 'Вы использовали голосовой ввод!');
+        }
+    };
+}
+
+function toggleVoiceInput() {
+    if (!recognition) {
+        initVoiceRecognition();
+    }
+
+    if (isListening) {
+        recognition.stop();
+    } else {
+        try {
+            recognition.start();
+        } catch (error) {
+            console.error('Error starting recognition:', error);
+        }
+    }
+}
+
+function showVoiceStatus() {
+    const voiceStatus = document.getElementById('voiceStatus');
+    if (voiceStatus) {
+        voiceStatus.style.display = 'flex';
+    }
+}
+
+function hideVoiceStatus() {
+    const voiceStatus = document.getElementById('voiceStatus');
+    if (voiceStatus) {
+        voiceStatus.style.display = 'none';
+    }
+}
+
+// ================================
+// CONFETTI ANIMATION (Duolingo style)
+// ================================
+
+function createConfetti() {
+    const container = document.getElementById('confettiContainer');
+    const colors = ['#FFD700', '#FFA500', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'];
+    
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        container.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 3000);
+    }
+}
+
+// ================================
+// CELEBRATION MODAL (NEW!)
+// ================================
+
+function showCelebration(title, message) {
+    const modal = document.getElementById('celebrationModal');
+    const titleEl = modal.querySelector('.celebration-title');
+    const messageEl = modal.querySelector('.celebration-message');
+    
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+    
+    modal.style.display = 'flex';
+    createConfetti();
+    
+    // Play celebration sound (if available)
+    playSound('celebration');
+}
+
+function closeCelebration() {
+    const modal = document.getElementById('celebrationModal');
+    modal.style.display = 'none';
+}
+
+// ================================
+// NOTIFICATIONS (NEW!)
+// ================================
+
+function showNotification(text, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = text;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// ================================
+// XP SYSTEM (Duolingo style)
+// ================================
+
+function addXP(amount) {
+    currentXP += amount;
+    pointsCount += amount;
+    
+    updateXPBar();
+    updateStats();
+    
+    // Check if daily goal reached
+    if (currentXP >= dailyGoal) {
+        showCelebration('🎉 Ежедневная цель достигнута!', `Вы заработали ${currentXP} XP сегодня!`);
+    }
+    
+    saveProgress();
+}
+
+function updateXPBar() {
+    const xpFill = document.getElementById('xpFill');
+    const currentXPEl = document.getElementById('currentXP');
+    const percentage = Math.min((currentXP / dailyGoal) * 100, 100);
+    
+    if (xpFill) {
+        xpFill.style.width = percentage + '%';
+    }
+    if (currentXPEl) {
+        currentXPEl.textContent = currentXP;
+    }
+}
+
+// ================================
+// QUESTS SYSTEM (NEW!)
+// ================================
+
+function updateQuests() {
+    // Quest 1: Send 5 messages
+    const quest1 = document.getElementById('quest1');
+    if (quest1 && questProgress.messages < 5) {
+        const progressEl = quest1.querySelector('.quest-progress');
+        progressEl.textContent = `${questProgress.messages}/5`;
+        
+        if (questProgress.messages >= 5) {
+            completeQuest(quest1, 10);
+        }
+    }
+    
+    // Quest 2: Use voice input
+    const quest2 = document.getElementById('quest2');
+    if (quest2 && questProgress.voiceUsed) {
+        const progressEl = quest2.querySelector('.quest-progress');
+        progressEl.textContent = '1/1';
+        completeQuest(quest2, 15);
+    }
+    
+    // Quest 3: Learn 10 words
+    const quest3 = document.getElementById('quest3');
+    if (quest3 && questProgress.wordsLearned < 10) {
+        const progressEl = quest3.querySelector('.quest-progress');
+        progressEl.textContent = `${questProgress.wordsLearned}/10`;
+        
+        if (questProgress.wordsLearned >= 10) {
+            completeQuest(quest3, 20);
+        }
+    }
+}
+
+function completeQuest(questElement, xpReward) {
+    if (!questElement.classList.contains('completed')) {
+        questElement.classList.add('completed');
+        const checkbox = questElement.querySelector('.quest-checkbox');
+        checkbox.innerHTML = '✓';
+        
+        addXP(xpReward);
+        showNotification(`✅ Задание выполнено! +${xpReward} XP`);
+        playSound('quest');
+    }
+}
+
+// ================================
+// ACHIEVEMENTS (Enhanced)
+// ================================
+
+function unlockAchievement(badgeId, name, description) {
+    const badge = document.getElementById(badgeId);
+    if (badge && badge.classList.contains('locked')) {
+        badge.classList.remove('locked');
+        badge.classList.add('unlocked');
+        showCelebration(`🏆 Новое достижение: ${name}!`, description);
+        addXP(25); // Bonus XP for achievement
+    }
+}
+
+function checkAchievements() {
+    // Enthusiast: 10 messages
+    if (messageCount >= 10) {
+        unlockAchievement('badge-enthusiast', 'Энтузиаст', 'Отправлено 10 сообщений');
+    }
+    
+    // Student: 50 words
+    if (wordsLearned >= 50) {
+        unlockAchievement('badge-student', 'Студент', 'Изучено 50 слов');
+    }
+    
+    // Regular: 7 day streak
+    if (streakCount >= 7) {
+        unlockAchievement('badge-regular', 'Регуляр', '7 дней подряд');
+    }
+    
+    // Master: 100 messages
+    if (messageCount >= 100) {
+        unlockAchievement('badge-master', 'Мастер', 'Отправлено 100 сообщений');
+    }
+}
+
+// ================================
+// SOUND EFFECTS (placeholder)
+// ================================
+
+function playSound(soundType) {
+    // In a real app, you would play actual sound files here
+    // For now, we'll just log it
+    console.log(`🔊 Playing sound: ${soundType}`);
+}
+
+// ================================
 // LEARNING TIPS CAROUSEL
 // ================================
 
@@ -106,7 +417,9 @@ const learningTips = [
     { icon: '🎯', text: 'Практикуйте каждый день для лучших результатов!' },
     { icon: '📝', text: 'Сохраняйте новые слова в свой словарь' },
     { icon: '🔊', text: 'Попробуйте голосовой ввод для практики произношения' },
-    { icon: '⭐', text: 'Выполняйте ежедневные задания для получения очков!' }
+    { icon: '⭐', text: 'Выполняйте ежедневные задания для получения очков!' },
+    { icon: '🎤', text: 'Говорите вслух для лучшего запоминания' },
+    { icon: '🏆', text: 'Получайте достижения за свой прогресс!' }
 ];
 
 let currentTipIndex = 0;
@@ -162,7 +475,12 @@ async function sendMessage() {
     chat.scrollTop = chat.scrollHeight;
 
     messageCount++;
+    questProgress.messages++;
     updateStats();
+    updateQuests();
+
+    // Add XP for sending message
+    addXP(5);
 
     // Индикатор печатания
     const typingIndicator = document.createElement("div");
@@ -201,9 +519,10 @@ async function sendMessage() {
         // Увеличиваем счетчик слов (примерная оценка)
         const wordCount = data.reply.split(' ').length;
         wordsLearned += Math.floor(wordCount / 10);
-        pointsCount += 5;
+        questProgress.wordsLearned += Math.floor(wordCount / 10);
         
         updateStats();
+        updateQuests();
         checkAchievements();
 
     } catch (error) {
@@ -242,15 +561,14 @@ function handleKeyPress(event) {
 }
 
 // ================================
-// ОБРАБОТКА ВВОДА (автоподсказки)
+// ОБРАБОТКА ВВОДА
 // ================================
 
 function handleInput() {
     const input = document.getElementById("message");
     const value = input.value.toLowerCase();
     
-    // Здесь можно добавить автоподсказки
-    // Пока просто базовая проверка
+    // Можно добавить автоподсказки
 }
 
 // ================================
@@ -295,102 +613,10 @@ function animateCounter(element) {
 }
 
 // ================================
-// ПРОВЕРКА ДОСТИЖЕНИЙ
-// ================================
-
-function checkAchievements() {
-    const badges = document.querySelectorAll('.achievement-badge');
-    
-    // Первое сообщение
-    if (messageCount >= 1 && badges[0]) {
-        badges[0].classList.add('unlocked');
-        badges[0].classList.remove('locked');
-    }
-    
-    // 10 сообщений
-    if (messageCount >= 10 && badges[1]) {
-        badges[1].classList.add('unlocked');
-        badges[1].classList.remove('locked');
-        showAchievementNotification('🔥 Достижение разблокировано: Энтузиаст!');
-    }
-    
-    // 50 слов
-    if (wordsLearned >= 50 && badges[2]) {
-        badges[2].classList.add('unlocked');
-        badges[2].classList.remove('locked');
-        showAchievementNotification('📚 Достижение разблокировано: Студент!');
-    }
-    
-    // 7 дней подряд (пример)
-    if (streakCount >= 7 && badges[3]) {
-        badges[3].classList.add('unlocked');
-        badges[3].classList.remove('locked');
-        showAchievementNotification('⭐ Достижение разблокировано: Регуляр!');
-    }
-}
-
-function showAchievementNotification(message) {
-    // Создаем уведомление о достижении
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 30px;
-        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        color: #000;
-        padding: 15px 25px;
-        border-radius: 15px;
-        font-weight: 700;
-        font-size: 14px;
-        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
-        z-index: 1000;
-        animation: slideInRight 0.5s ease-out;
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.5s ease-out';
-        setTimeout(() => notification.remove(), 500);
-    }, 3000);
-}
-
-// ================================
-// ГОЛОСОВОЙ ВВОД
-// ================================
-
-function toggleVoiceInput() {
-    // Проверка поддержки Web Speech API
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert('Ваш браузер не поддерживает голосовой ввод');
-        return;
-    }
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    
-    recognition.lang = 'ru-RU'; // Можно переключать между ru-RU и kk-KZ
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        document.getElementById('message').value = transcript;
-    };
-
-    recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-    };
-
-    recognition.start();
-}
-
-// ================================
 // ЭМОДЗИ ПИКЕР
 // ================================
 
 function toggleEmojiPicker() {
-    // Простой список популярных эмодзи
     const emojis = ['👋', '😊', '🎉', '❤️', '👍', '🙏', '🔥', '⭐', '📚', '✨'];
     
     const input = document.getElementById('message');
@@ -404,38 +630,33 @@ function toggleEmojiPicker() {
 // ================================
 
 function saveWord(word) {
-    // Сохранение в localStorage
     let savedWords = JSON.parse(localStorage.getItem('savedWords') || '[]');
     
     if (!savedWords.includes(word)) {
         savedWords.push(word);
         localStorage.setItem('savedWords', JSON.stringify(savedWords));
         
-        // Показываем уведомление
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(46, 204, 113, 0.9);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 13px;
-            box-shadow: 0 5px 20px rgba(46, 204, 113, 0.4);
-            z-index: 1000;
-            animation: slideInUp 0.4s ease-out;
-        `;
-        notification.textContent = `✓ Слово "${word}" сохранено!`;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOutDown 0.4s ease-out';
-            setTimeout(() => notification.remove(), 400);
-        }, 2000);
+        showNotification(`✓ Слово "${word}" сохранено!`);
+        addXP(3);
     } else {
-        alert('Это слово уже сохранено!');
+        showNotification('ℹ️ Это слово уже сохранено', 'info');
+    }
+}
+
+// ================================
+// ПРОИЗНОШЕНИЕ СЛОВА
+// ================================
+
+function speakWord(word) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = 'kk-KZ'; // Казахский язык
+        utterance.rate = 0.8; // Медленнее для лучшего понимания
+        speechSynthesis.speak(utterance);
+        
+        showNotification('🔊 Воспроизведение...');
+    } else {
+        showNotification('❌ Синтез речи не поддерживается', 'error');
     }
 }
 
@@ -462,13 +683,59 @@ function closeModal() {
 }
 
 // ================================
-// ЗАЩИТА ОТ XSS
+// СОХРАНЕНИЕ И ЗАГРУЗКА ПРОГРЕССА
 // ================================
 
-function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
+function saveProgress() {
+    const progress = {
+        messageCount,
+        wordsLearned,
+        streakCount,
+        pointsCount,
+        currentXP,
+        voiceUsed,
+        questProgress,
+        lastVisit: new Date().toDateString()
+    };
+    localStorage.setItem('userProgress', JSON.stringify(progress));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem('userProgress');
+    if (saved) {
+        const progress = JSON.parse(saved);
+        messageCount = progress.messageCount || 0;
+        wordsLearned = progress.wordsLearned || 0;
+        streakCount = progress.streakCount || 0;
+        pointsCount = progress.pointsCount || 0;
+        currentXP = progress.currentXP || 0;
+        voiceUsed = progress.voiceUsed || false;
+        questProgress = progress.questProgress || { messages: 0, voiceUsed: false, wordsLearned: 0 };
+        
+        // Check streak
+        const today = new Date().toDateString();
+        if (progress.lastVisit !== today) {
+            const lastDate = new Date(progress.lastVisit);
+            const todayDate = new Date(today);
+            const diffTime = Math.abs(todayDate - lastDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+                streakCount++;
+                showNotification(`🔥 Серия продолжается! ${streakCount} дней подряд!`);
+            } else if (diffDays > 1) {
+                streakCount = 1;
+                showNotification('ℹ️ Серия прервалась, начинаем заново!', 'info');
+            }
+            
+            // Reset daily XP
+            currentXP = 0;
+        }
+        
+        updateStats();
+        updateXPBar();
+        updateQuests();
+    }
 }
 
 // ================================
@@ -569,26 +836,6 @@ const additionalStyles = `
         border: 2px solid rgba(231, 76, 60, 0.5);
         color: #ff7675;
     }
-
-    /* Keyboard shortcuts hint */
-    .keyboard-hint {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        background: rgba(10, 29, 40, 0.9);
-        padding: 10px 15px;
-        border-radius: 10px;
-        font-size: 12px;
-        color: var(--text-gray);
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: 100;
-    }
-
-    body:hover .keyboard-hint {
-        opacity: 1;
-    }
 `;
 
 // ================================
@@ -607,27 +854,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Запускаем карусель подсказок
     rotateTips();
 
-    // Проверяем сохраненный прогресс
-    const savedProgress = localStorage.getItem('userProgress');
-    if (savedProgress) {
-        const progress = JSON.parse(savedProgress);
-        messageCount = progress.messageCount || 0;
-        wordsLearned = progress.wordsLearned || 0;
-        streakCount = progress.streakCount || 0;
-        pointsCount = progress.pointsCount || 0;
-        updateStats();
-    }
+    // Загружаем прогресс
+    loadProgress();
+
+    // Инициализируем голосовое распознавание
+    initVoiceRecognition();
 
     // Сохраняем прогресс при закрытии страницы
-    window.addEventListener('beforeunload', () => {
-        const progress = {
-            messageCount,
-            wordsLearned,
-            streakCount,
-            pointsCount
-        };
-        localStorage.setItem('userProgress', JSON.stringify(progress));
-    });
+    window.addEventListener('beforeunload', saveProgress);
+
+    // Периодически сохраняем прогресс
+    setInterval(saveProgress, 30000); // Каждые 30 секунд
 
     // Горячие клавиши
     document.addEventListener('keydown', (e) => {
@@ -642,12 +879,30 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             quick('Объясни это слово');
         }
+
+        // Ctrl/Cmd + M для голосового ввода
+        if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+            e.preventDefault();
+            toggleVoiceInput();
+        }
     });
+
+    // Change voice language when select changes
+    const voiceLangSelect = document.getElementById('voiceLangSelect');
+    if (voiceLangSelect) {
+        voiceLangSelect.addEventListener('change', () => {
+            if (recognition) {
+                const selectedLang = voiceLangSelect.value;
+                recognition.lang = selectedLang === 'auto' ? 'ru-RU' : selectedLang;
+            }
+        });
+    }
 
     console.log("🇰🇿 Qazaq AI готов к работе!");
     console.log("✨ Горячие клавиши:");
     console.log("   Ctrl+T - Быстрый перевод");
     console.log("   Ctrl+D - Словарь");
+    console.log("   Ctrl+M - Голосовой ввод");
 });
 
 // ================================
@@ -658,6 +913,9 @@ window.QazaqAI = {
     sendMessage,
     quick,
     saveWord,
+    speakWord,
+    toggleVoiceInput,
+    addXP,
     messageCount: () => messageCount,
-    stats: () => ({ messageCount, wordsLearned, streakCount, pointsCount })
+    stats: () => ({ messageCount, wordsLearned, streakCount, pointsCount, currentXP })
 };

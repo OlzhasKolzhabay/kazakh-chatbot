@@ -24,6 +24,19 @@
         <div class="ornament ornament-4"></div>
     </div>
 
+    <!-- Confetti Container -->
+    <div id="confettiContainer" class="confetti-container"></div>
+
+    <!-- Celebration Modal -->
+    <div id="celebrationModal" class="celebration-modal">
+        <div class="celebration-content">
+            <div class="celebration-icon">🎉</div>
+            <h2 class="celebration-title">Молодец!</h2>
+            <p class="celebration-message"></p>
+            <button class="celebration-btn" onclick="closeCelebration()">Продолжить</button>
+        </div>
+    </div>
+
     <header class="topbar">
         <div class="logo-container">
             <div class="logo">
@@ -58,6 +71,13 @@
                 <div>
                     <div class="stat-value" id="pointsCount">0</div>
                     <div class="stat-name">очков</div>
+                </div>
+            </div>
+            <div class="stat-mini streak-freeze" title="Заморозка серии">
+                <span class="stat-icon">❄️</span>
+                <div>
+                    <div class="stat-value" id="freezeCount">3</div>
+                    <div class="stat-name">заморозок</div>
                 </div>
             </div>
         </div>
@@ -130,11 +150,13 @@
                 </div>
 
                 <div class="input-wrapper">
-                    <button class="voice-btn" onclick="toggleVoiceInput()" title="Голосовой ввод">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <!-- Voice Button with enhanced UI -->
+                    <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceInput()" title="Голосовой ввод (Нажмите и говорите)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="mic-icon">
             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="2"/>
             <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
+          <div class="voice-pulse"></div>
         </button>
 
                     <input id="message" placeholder="Напиши сообщение на русском или казахском языке..." onkeypress="handleKeyPress(event)" oninput="handleInput()" />
@@ -150,6 +172,21 @@
             <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
+                </div>
+
+                <!-- Voice Recognition Status -->
+                <div id="voiceStatus" class="voice-status" style="display: none;">
+                    <div class="voice-status-content">
+                        <div class="voice-animation">
+                            <span class="voice-bar"></span>
+                            <span class="voice-bar"></span>
+                            <span class="voice-bar"></span>
+                            <span class="voice-bar"></span>
+                            <span class="voice-bar"></span>
+                        </div>
+                        <p class="voice-text">Слушаю...</p>
+                        <p class="voice-hint">Говорите на русском или казахском языке</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -177,12 +214,23 @@
                         <div class="progress-stats">
                             <div class="stat-item">
                                 <div class="stat-number" id="messageCount">0</div>
-                                <div class="stat-label">сообщений</div>
+                                <div class="stat-label">Сообщений</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-number" id="wordsLearned">0</div>
-                                <div class="stat-label">слов изучено</div>
+                                <div class="stat-label">Слов изучено</div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- XP Progress Bar (Duolingo style) -->
+                    <div class="xp-progress">
+                        <div class="xp-header">
+                            <span class="xp-label">Ежедневная цель</span>
+                            <span class="xp-value"><span id="currentXP">0</span> / <span id="dailyGoal">50</span> XP</span>
+                        </div>
+                        <div class="xp-bar">
+                            <div class="xp-fill" id="xpFill" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
@@ -190,29 +238,79 @@
 
             <div class="divider"></div>
 
-            <!-- Quick Actions -->
-            <div class="actions-section">
+            <!-- Daily Quests (NEW!) -->
+            <div class="quests-section">
                 <div class="section-header">
-                    <h3>⚡ Быстрые действия</h3>
+                    <h3>🎯 Ежедневные задания</h3>
                 </div>
-                <div class="quick-actions">
-                    <button class="action-btn primary" onclick="quickTranslate()">
-          <span class="btn-icon">🔄</span>
-          <span class="btn-text">Перевод</span>
-          <span class="btn-badge">Ctrl+T</span>
-        </button>
-                    <button class="action-btn secondary" onclick="quick('Объясни это слово', false)">
-          <span class="btn-icon">📚</span>
-          <span class="btn-text">Словарь</span>
-        </button>
-                    <button class="action-btn tertiary" onclick="quick('Дай пример предложения', false)">
-          <span class="btn-icon">✍️</span>
-          <span class="btn-text">Примеры</span>
-        </button>
-                    <button class="action-btn quaternary" onclick="quick('Проверь мой текст на казахском: ', false)">
-          <span class="btn-icon">✓</span>
-          <span class="btn-text">Проверка</span>
-        </button>
+                <div class="quests-list">
+                    <div class="quest-item" id="quest1">
+                        <div class="quest-checkbox"></div>
+                        <div class="quest-info">
+                            <div class="quest-title">Отправь 5 сообщений</div>
+                            <div class="quest-reward">+10 XP</div>
+                        </div>
+                        <div class="quest-progress">0/5</div>
+                    </div>
+                    <div class="quest-item" id="quest2">
+                        <div class="quest-checkbox"></div>
+                        <div class="quest-info">
+                            <div class="quest-title">Используй голосовой ввод</div>
+                            <div class="quest-reward">+15 XP</div>
+                        </div>
+                        <div class="quest-progress">0/1</div>
+                    </div>
+                    <div class="quest-item" id="quest3">
+                        <div class="quest-checkbox"></div>
+                        <div class="quest-info">
+                            <div class="quest-title">Изучи 10 новых слов</div>
+                            <div class="quest-reward">+20 XP</div>
+                        </div>
+                        <div class="quest-progress">0/10</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Leaderboard (NEW!) -->
+            <div class="leaderboard-section">
+                <div class="section-header">
+                    <h3>🏆 Таблица лидеров</h3>
+                </div>
+                <div class="leaderboard-list">
+                    <div class="leaderboard-item your-rank">
+                        <div class="rank">42</div>
+                        <div class="user-info">
+                            <div class="user-avatar">😊</div>
+                            <div class="user-name">Вы</div>
+                        </div>
+                        <div class="user-xp">250 XP</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank gold">1</div>
+                        <div class="user-info">
+                            <div class="user-avatar">🌟</div>
+                            <div class="user-name">Асель К.</div>
+                        </div>
+                        <div class="user-xp">1,240 XP</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank silver">2</div>
+                        <div class="user-info">
+                            <div class="user-avatar">⚡</div>
+                            <div class="user-name">Нурлан Б.</div>
+                        </div>
+                        <div class="user-xp">1,105 XP</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank bronze">3</div>
+                        <div class="user-info">
+                            <div class="user-avatar">🚀</div>
+                            <div class="user-name">Айдана М.</div>
+                        </div>
+                        <div class="user-xp">890 XP</div>
+                    </div>
                 </div>
             </div>
 
@@ -221,21 +319,24 @@
             <!-- Word of the Day -->
             <div class="word-section">
                 <div class="section-header">
-                    <h3>📝 Слово дня</h3>
+                    <h3>📚 Слово дня</h3>
                 </div>
                 <div class="word-card">
-                    <div class="word-main">
-                        <div class="word-kz">Достық</div>
-                        <div class="word-transcription">[dostɯq]</div>
+                    <div class="word-header">
+                        <div class="word-title">Сәлем</div>
+                        <button class="word-speaker" onclick="speakWord('Сәлем')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
                     </div>
-                    <div class="word-translation">Дружба</div>
+                    <div class="word-translation">Привет</div>
                     <div class="word-example">
-                        <div class="example-kz">Достық — өмірдің маңызды бөлігі</div>
-                        <div class="example-ru">Дружба — важная часть жизни</div>
+                        <strong>Пример:</strong> Сәлем, қалың қалай?
                     </div>
-                    <button class="save-word-btn" onclick="saveWord('Достық')">
+                    <button class="save-word-btn" onclick="saveWord('Сәлем')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           Сохранить
         </button>
@@ -290,17 +391,25 @@
                         <div class="badge-icon">🌟</div>
                         <div class="badge-name">Новичок</div>
                     </div>
-                    <div class="achievement-badge locked" title="10 сообщений">
+                    <div class="achievement-badge locked" title="10 сообщений" id="badge-enthusiast">
                         <div class="badge-icon">🔥</div>
                         <div class="badge-name">Энтузиаст</div>
                     </div>
-                    <div class="achievement-badge locked" title="50 слов изучено">
+                    <div class="achievement-badge locked" title="50 слов изучено" id="badge-student">
                         <div class="badge-icon">📚</div>
                         <div class="badge-name">Студент</div>
                     </div>
-                    <div class="achievement-badge locked" title="7 дней подряд">
+                    <div class="achievement-badge locked" title="7 дней подряд" id="badge-regular">
                         <div class="badge-icon">⭐</div>
                         <div class="badge-name">Регуляр</div>
+                    </div>
+                    <div class="achievement-badge locked" title="Использовал голосовой ввод" id="badge-speaker">
+                        <div class="badge-icon">🎤</div>
+                        <div class="badge-name">Оратор</div>
+                    </div>
+                    <div class="achievement-badge locked" title="100 сообщений" id="badge-master">
+                        <div class="badge-icon">👑</div>
+                        <div class="badge-name">Мастер</div>
                     </div>
                 </div>
             </div>
@@ -322,25 +431,25 @@
                         <div class="guide-item">
                             <span class="guide-number">1</span>
                             <div class="guide-text">
-                                <strong>Быстрые кнопки:</strong> Используйте кнопки справа для быстрых действий
+                                <strong>Голосовой ввод:</strong> Нажмите на микрофон и говорите на русском или казахском
                             </div>
                         </div>
                         <div class="guide-item">
                             <span class="guide-number">2</span>
                             <div class="guide-text">
-                                <strong>Горячие клавиши:</strong> Ctrl+T (перевод), Ctrl+D (словарь)
+                                <strong>Ежедневные задания:</strong> Выполняйте квесты для получения XP
                             </div>
                         </div>
                         <div class="guide-item">
                             <span class="guide-number">3</span>
                             <div class="guide-text">
-                                <strong>Голос и эмодзи:</strong> Кнопки слева от поля ввода
+                                <strong>Горячие клавиши:</strong> Ctrl+T (перевод), Ctrl+D (словарь)
                             </div>
                         </div>
                         <div class="guide-item">
                             <span class="guide-number">4</span>
                             <div class="guide-text">
-                                <strong>Сохранение слов:</strong> Нажмите "Сохранить" на карточке слова дня
+                                <strong>Достижения:</strong> Получайте награды за прогресс в обучении
                             </div>
                         </div>
                     </div>
@@ -406,6 +515,14 @@
                 <div class="setting-item">
                     <label>Звуковые уведомления</label>
                     <input type="checkbox" checked>
+                </div>
+                <div class="setting-item">
+                    <label>Язык распознавания речи</label>
+                    <select id="voiceLangSelect">
+          <option value="ru-RU">Русский</option>
+          <option value="kk-KZ">Казахский</option>
+          <option value="auto">Авто-определение</option>
+        </select>
                 </div>
             </div>
         </div>
