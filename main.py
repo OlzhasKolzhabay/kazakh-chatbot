@@ -53,7 +53,7 @@ def chat(data: dict):
         genai.configure(api_key=api_key)
 
         model = genai.GenerativeModel(
-            "models/gemini-2.5-flash-lite",
+            "models/gemini-2.5-flash",
             generation_config={
                 "temperature": 0.3,
                 "max_output_tokens": 150
