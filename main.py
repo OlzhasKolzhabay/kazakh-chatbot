@@ -27,7 +27,7 @@ SYSTEM_PROMPT = """
 - Коротко
 - Понятно
 - Как в живом чате
-- 3–6 предложений максимум
+- 6–8 предложений максимум
 
 СОДЕРЖАНИЕ:
 - Только изучение казахского языка
@@ -53,10 +53,10 @@ def chat(data: dict):
         genai.configure(api_key=api_key)
 
         model = genai.GenerativeModel(
-            "models/gemini-2.5-flash",
+            "models/gemini-2.5-pro",
             generation_config={
                 "temperature": 0.3,
-                "max_output_tokens": 150
+                "max_output_tokens": 1000
             }
         )
 
