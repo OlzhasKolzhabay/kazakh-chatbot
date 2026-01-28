@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Existing background elements -->
     <div class="particles-container"><canvas id="particlesCanvas"></canvas></div>
     <div class="ornament-bg">
         <div class="ornament ornament-1"></div>
@@ -17,8 +16,9 @@
         <div class="ornament ornament-4"></div>
     </div>
     
-    <!-- Confetti & Modals -->
     <div id="confettiContainer" class="confetti-container"></div>
+    
+    <!-- Celebration Modal -->
     <div id="celebrationModal" class="celebration-modal">
         <div class="celebration-content">
             <div class="celebration-icon">🎉</div>
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <!-- NEW: Level Up Modal -->
+    <!-- Level Up Modal (NEW) -->
     <div id="levelUpModal" class="level-up-modal">
         <div class="level-up-content">
             <div class="level-up-rays"></div>
@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <!-- NEW: Daily Reward Modal -->
+    <!-- Daily Reward Modal (NEW) -->
     <div id="dailyRewardModal" class="daily-reward-modal">
         <div class="daily-reward-content">
             <div class="daily-reward-header">
@@ -57,10 +57,10 @@
         </div>
     </div>
 
-    <!-- NEW: Power-up Modal -->
+    <!-- Power-up Modal (NEW) -->
     <div id="powerUpModal" class="power-up-modal">
         <div class="power-up-content">
-            <h2>⚡ Выбери бонус!</h2>
+            <h2>⚡ Магазин бонусов</h2>
             <p class="power-up-subtitle">Используй свои кристаллы мудрости</p>
             <div class="power-ups-grid">
                 <div class="power-up-card" onclick="usePowerUp('double_xp')">
@@ -81,22 +81,83 @@
                     <div class="power-up-description">1 день</div>
                     <div class="power-up-cost">💎 40</div>
                 </div>
+                <div class="power-up-card" onclick="usePowerUp('word_boost')">
+                    <div class="power-up-icon">📚</div>
+                    <div class="power-up-name">Словарный буст</div>
+                    <div class="power-up-description">1 час</div>
+                    <div class="power-up-cost">💎 35</div>
+                </div>
             </div>
             <button class="close-power-up-btn" onclick="closePowerUpModal()">Закрыть</button>
         </div>
     </div>
 
-    <!-- NEW: Combo Indicator -->
+    <!-- Mini Games Modal (NEW!) -->
+    <div id="miniGamesModal" class="mini-games-modal">
+        <div class="mini-games-content">
+            <h2>🎮 Мини-игры</h2>
+            <div class="mini-games-grid">
+                <div class="mini-game-card" onclick="startGame('flashcards')">
+                    <div class="game-icon">🃏</div>
+                    <div class="game-name">Карточки</div>
+                    <div class="game-desc">Учи слова</div>
+                </div>
+                <div class="mini-game-card" onclick="startGame('quiz')">
+                    <div class="game-icon">❓</div>
+                    <div class="game-name">Викторина</div>
+                    <div class="game-desc">Проверь знания</div>
+                </div>
+                <div class="mini-game-card" onclick="startGame('matching')">
+                    <div class="game-icon">🎯</div>
+                    <div class="game-name">Найди пару</div>
+                    <div class="game-desc">Сопоставь слова</div>
+                </div>
+                <div class="mini-game-card" onclick="startGame('typing')">
+                    <div class="game-icon">⌨️</div>
+                    <div class="game-name">Печатай</div>
+                    <div class="game-desc">Скорость набора</div>
+                </div>
+            </div>
+            <button class="close-games-btn" onclick="closeMiniGamesModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Combo Indicator (NEW) -->
     <div id="comboIndicator" class="combo-indicator">
         <div class="combo-fire">🔥</div>
         <div class="combo-count">×<span id="comboCount">0</span></div>
         <div class="combo-label">КОМБО!</div>
     </div>
 
-    <!-- NEW: Floating XP -->
+    <!-- Floating XP (NEW) -->
     <div id="floatingXP" class="floating-xp-container"></div>
 
-    <!-- Header -->
+    <!-- Stats Overlay (NEW!) -->
+    <div id="statsOverlay" class="stats-overlay">
+        <button class="stats-toggle" onclick="toggleStatsOverlay()">
+            <span class="stats-icon">📊</span>
+        </button>
+        <div class="stats-panel">
+            <h3>📊 Твоя статистика</h3>
+            <div class="stat-row">
+                <span>Всего времени:</span>
+                <span id="totalTime">0ч 0м</span>
+            </div>
+            <div class="stat-row">
+                <span>Средний XP/день:</span>
+                <span id="avgXP">0</span>
+            </div>
+            <div class="stat-row">
+                <span>Лучший день:</span>
+                <span id="bestDay">0 XP</span>
+            </div>
+            <div class="stat-row">
+                <span>Макс. комбо:</span>
+                <span id="maxComboStat">0</span>
+            </div>
+        </div>
+    </div>
+
     <header class="topbar">
         <div class="logo-container">
             <div class="logo">
@@ -148,13 +209,10 @@
         </div>
     </header>
 
-    <!-- Main App -->
     <main class="app">
         <section class="chat-section">
-            <!-- Active Power-ups Display -->
             <div id="activePowerUps" class="active-power-ups"></div>
 
-            <!-- Welcome Banner -->
             <div class="welcome-banner" id="welcomeBanner">
                 <div class="welcome-header">
                     <h2>Сәлеметсіз бе! 👋</h2>
@@ -203,10 +261,8 @@
                 </div>
             </div>
 
-            <!-- Chat -->
             <div id="chat" class="chat"></div>
 
-            <!-- Input Area -->
             <div class="input-area">
                 <div class="learning-tips" id="learningTips">
                     <div class="tip-carousel">
@@ -255,12 +311,16 @@
             </div>
         </section>
 
-        <!-- Side Panel with abbreviated content - see full version in outputs -->
         <aside class="side-panel">
-            <!-- Progress Section -->
+            <!-- Progress -->
             <div class="progress-section">
                 <div class="section-header">
                     <h3>📈 Твой прогресс</h3>
+                    <button class="expand-btn" onclick="toggleSection('progress')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="section-content" id="progress">
                     <div class="level-progress-card">
@@ -312,6 +372,34 @@
 
             <div class="divider"></div>
 
+            <!-- Quick Actions (RESTORED!) -->
+            <div class="actions-section">
+                <div class="section-header">
+                    <h3>⚡ Быстрые действия</h3>
+                </div>
+                <div class="quick-actions">
+                    <button class="action-btn primary" onclick="quickTranslate()">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-text">Перевод</span>
+                        <span class="btn-badge">Ctrl+T</span>
+                    </button>
+                    <button class="action-btn secondary" onclick="quick('Объясни это слово')">
+                        <span class="btn-icon">📚</span>
+                        <span class="btn-text">Словарь</span>
+                    </button>
+                    <button class="action-btn tertiary" onclick="quick('Дай пример предложения')">
+                        <span class="btn-icon">✍️</span>
+                        <span class="btn-text">Примеры</span>
+                    </button>
+                    <button class="action-btn quaternary" onclick="openMiniGamesModal()">
+                        <span class="btn-icon">🎮</span>
+                        <span class="btn-text">Игры</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
             <!-- Quests -->
             <div class="quests-section">
                 <div class="section-header">
@@ -354,8 +442,293 @@
                 </div>
             </div>
 
-            <!-- Additional sections abbreviated for token limit... -->
-            
+            <div class="divider"></div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard-section">
+                <div class="section-header">
+                    <h3>🏆 Таблица лидеров</h3>
+                    <select class="leaderboard-filter">
+                        <option>Сегодня</option>
+                        <option>Эта неделя</option>
+                        <option>Этот месяц</option>
+                    </select>
+                </div>
+                <div class="leaderboard-list">
+                    <div class="leaderboard-item your-rank">
+                        <div class="rank">42</div>
+                        <div class="user-info">
+                            <div class="user-avatar">😊</div>
+                            <div class="user-details">
+                                <div class="user-name">Вы</div>
+                                <div class="user-title">Новичок</div>
+                            </div>
+                        </div>
+                        <div class="user-stats">
+                            <div class="user-xp">250 XP</div>
+                            <div class="rank-change up">↑ 5</div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank gold">1</div>
+                        <div class="user-info">
+                            <div class="user-avatar">🌟</div>
+                            <div class="user-details">
+                                <div class="user-name">Асель К.</div>
+                                <div class="user-title">Гуру языка</div>
+                            </div>
+                        </div>
+                        <div class="user-stats">
+                            <div class="user-xp">1,240 XP</div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank silver">2</div>
+                        <div class="user-info">
+                            <div class="user-avatar">⚡</div>
+                            <div class="user-details">
+                                <div class="user-name">Нурлан Б.</div>
+                                <div class="user-title">Мастер</div>
+                            </div>
+                        </div>
+                        <div class="user-stats">
+                            <div class="user-xp">1,105 XP</div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="rank bronze">3</div>
+                        <div class="user-info">
+                            <div class="user-avatar">🚀</div>
+                            <div class="user-details">
+                                <div class="user-name">Айдана М.</div>
+                                <div class="user-title">Эксперт</div>
+                            </div>
+                        </div>
+                        <div class="user-stats">
+                            <div class="user-xp">890 XP</div>
+                            <div class="rank-change down">↓ 1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Word of the Day (RESTORED!) -->
+            <div class="word-section">
+                <div class="section-header">
+                    <h3>📝 Слово дня</h3>
+                </div>
+                <div class="word-card">
+                    <div class="word-header">
+                        <div class="word-title">Достық</div>
+                        <button class="word-speaker" onclick="speakWord('Достық')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="word-translation">Дружба</div>
+                    <div class="word-example">
+                        <strong>Пример:</strong> Достық — өмірдің маңызды бөлігі
+                    </div>
+                    <button class="save-word-btn" onclick="saveWord('Достық')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Сохранить
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Culture (RESTORED!) -->
+            <div class="culture-section">
+                <div class="section-header">
+                    <h3>🎨 Культура</h3>
+                </div>
+                <div class="culture-quote">
+                    <div class="quote-mark">«</div>
+                    <div class="quote-text">
+                        <p class="kazakh">Тіл — ұлттың жаны</p>
+                        <p class="russian">Язык — душа нации</p>
+                    </div>
+                    <div class="quote-mark closing">»</div>
+                </div>
+
+                <div class="cultural-tips">
+                    <div class="tip-item" onclick="quick('Расскажи про казахский алфавит')">
+                        <span class="tip-icon">🔤</span>
+                        <span>Алфавит</span>
+                    </div>
+                    <div class="tip-item" onclick="quick('Какие есть казахские праздники?')">
+                        <span class="tip-icon">🎉</span>
+                        <span>Праздники</span>
+                    </div>
+                    <div class="tip-item" onclick="quick('Расскажи про казахскую кухню')">
+                        <span class="tip-icon">🍲</span>
+                        <span>Кухня</span>
+                    </div>
+                    <div class="tip-item" onclick="quick('Расскажи о казахских музыкальных инструментах')">
+                        <span class="tip-icon">🎵</span>
+                        <span>Музыка</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Achievements (EXPANDED!) -->
+            <div class="achievements-section">
+                <div class="section-header">
+                    <h3>🏆 Достижения</h3>
+                    <span class="achievements-count"><span id="unlockedCount">1</span>/12</span>
+                </div>
+                <div class="achievements-grid">
+                    <div class="achievement-badge unlocked" title="Первое сообщение">
+                        <div class="badge-icon">🌟</div>
+                        <div class="badge-name">Новичок</div>
+                        <div class="badge-progress">✓</div>
+                    </div>
+                    <div class="achievement-badge locked" title="10 сообщений" id="badge-enthusiast">
+                        <div class="badge-icon">🔥</div>
+                        <div class="badge-name">Энтузиаст</div>
+                        <div class="badge-progress">0/10</div>
+                    </div>
+                    <div class="achievement-badge locked" title="50 слов изучено" id="badge-student">
+                        <div class="badge-icon">📚</div>
+                        <div class="badge-name">Студент</div>
+                        <div class="badge-progress">0/50</div>
+                    </div>
+                    <div class="achievement-badge locked" title="7 дней подряд" id="badge-regular">
+                        <div class="badge-icon">⭐</div>
+                        <div class="badge-name">Регуляр</div>
+                        <div class="badge-progress">0/7</div>
+                    </div>
+                    <div class="achievement-badge locked" title="Использовал голосовой ввод" id="badge-speaker">
+                        <div class="badge-icon">🎤</div>
+                        <div class="badge-name">Оратор</div>
+                        <div class="badge-progress">0/1</div>
+                    </div>
+                    <div class="achievement-badge locked" title="100 сообщений" id="badge-master">
+                        <div class="badge-icon">👑</div>
+                        <div class="badge-name">Мастер</div>
+                        <div class="badge-progress">0/100</div>
+                    </div>
+                    <div class="achievement-badge locked" title="Комбо ×10" id="badge-combo">
+                        <div class="badge-icon">🔥</div>
+                        <div class="badge-name">Комбо мастер</div>
+                        <div class="badge-progress">0/10</div>
+                    </div>
+                    <div class="achievement-badge locked" title="Использовал все бонусы" id="badge-powerup">
+                        <div class="badge-icon">⚡</div>
+                        <div class="badge-name">Стратег</div>
+                        <div class="badge-progress">0/3</div>
+                    </div>
+                    <div class="achievement-badge locked rare" title="30 дней подряд" id="badge-legend">
+                        <div class="badge-icon">💎</div>
+                        <div class="badge-name">Легенда</div>
+                        <div class="badge-progress">0/30</div>
+                    </div>
+                    <div class="achievement-badge locked rare" title="1000 слов изучено" id="badge-polyglot">
+                        <div class="badge-icon">🌍</div>
+                        <div class="badge-name">Полиглот</div>
+                        <div class="badge-progress">0/1000</div>
+                    </div>
+                    <div class="achievement-badge locked epic" title="Достигни 10 уровня" id="badge-champion">
+                        <div class="badge-icon">🏅</div>
+                        <div class="badge-name">Чемпион</div>
+                        <div class="badge-progress">0/10</div>
+                    </div>
+                    <div class="achievement-badge locked legendary" title="Секретное достижение" id="badge-secret">
+                        <div class="badge-icon">👾</div>
+                        <div class="badge-name">???</div>
+                        <div class="badge-progress">???</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Guide (RESTORED!) -->
+            <div class="guide-section">
+                <div class="section-header">
+                    <h3>📖 Инструкция</h3>
+                    <button class="expand-btn" onclick="toggleSection('guide')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="section-content" id="guide">
+                    <div class="guide-card">
+                        <div class="guide-item">
+                            <span class="guide-number">1</span>
+                            <div class="guide-text">
+                                <strong>Голосовой ввод:</strong> Нажмите на микрофон и говорите
+                            </div>
+                        </div>
+                        <div class="guide-item">
+                            <span class="guide-number">2</span>
+                            <div class="guide-text">
+                                <strong>Быстрые действия:</strong> Кнопки для перевода, словаря и игр
+                            </div>
+                        </div>
+                        <div class="guide-item">
+                            <span class="guide-number">3</span>
+                            <div class="guide-text">
+                                <strong>Горячие клавиши:</strong> Ctrl+T (перевод), Ctrl+M (голос)
+                            </div>
+                        </div>
+                        <div class="guide-item">
+                            <span class="guide-number">4</span>
+                            <div class="guide-text">
+                                <strong>Комбо система:</strong> Быстрые сообщения = больше очков!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- About (RESTORED!) -->
+            <div class="about-section">
+                <div class="section-header">
+                    <h3>ℹ️ О проекте</h3>
+                </div>
+                <div class="about-card">
+                    <div class="about-logo">🇰🇿</div>
+                    <h4 class="about-title">Qazaq AI</h4>
+                    <p class="about-description">
+                        Интеллектуальный помощник для изучения казахского языка, созданный с использованием современных AI технологий.
+                    </p>
+                    <div class="about-divider"></div>
+                    <div class="creators-section">
+                        <div class="creators-title">👨‍💻 Создатели проекта:</div>
+                        <div class="creator-item">
+                            <span class="creator-icon">🎓</span>
+                            <div class="creator-info">
+                                <div class="creator-name">Olzhas Kolzhabay</div>
+                                <div class="creator-role">Astana IT University</div>
+                            </div>
+                        </div>
+                        <div class="creator-item">
+                            <span class="creator-icon">🎓</span>
+                            <div class="creator-info">
+                                <div class="creator-name">Ali Galimzhanov</div>
+                                <div class="creator-role">Astana IT University</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-footer">
+                        <span class="about-year">2026</span>
+                        <span class="about-separator">•</span>
+                        <span class="about-uni">AITU</span>
+                    </div>
+                </div>
+            </div>
         </aside>
     </main>
 
