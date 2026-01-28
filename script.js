@@ -1,5 +1,60 @@
-// QAZAQ AI - COMPLETE VERSION WITH ALL FEATURES
+// QAZAQ AI - COMPLETE VERSION WITH ALL FEATURES + MULTILANGUAGE
 const API_URL = "https://kazakh-chatbot-production.up.railway.app/chat";
+
+// TRANSLATIONS
+const translations = {
+    ru: { online: "Онлайн", daysStreak: "дней подряд", crystals: "кристаллов", level: "уровень", tagline: "AI-помощник для изучения казахского языка", welcomeTitle: "Сәлеметсіз бе! 👋", welcomeSubtitle: "Добро пожаловать в Qazaq AI — твоего личного помощника в изучении казахского языка", greetings: "Приветствия", traditions: "Традиции", basicPhrases: "Базовые фразы", alphabet: "Алфавит", phraseOfDay: "Фраза дня", practice: "Практиковать", inputPlaceholder: "Напиши сообщение на русском или казахском языке...", listening: "Слушаю...", speakRuOrKz: "Говорите на русском или казахском языке", yourProgress: "Твой прогресс", messages: "Сообщений", wordsLearned: "Слов изучено", dailyGoal: "Ежедневная цель", quickActions: "Быстрые действия", translation: "Перевод", dictionary: "Словарь", examples: "Примеры", games: "Игры", dailyQuests: "Ежедневные задания", leaderboard: "Таблица лидеров", you: "Вы", wordOfDay: "Слово дня", save: "Сохранить", culture: "Культура", achievements: "Достижения", guide: "Инструкция", about: "О проекте", yourStats: "📊 Твоя статистика", totalTime: "Всего времени:", avgXPPerDay: "Средний XP/день:", bestDay: "Лучший день:", maxCombo: "Макс. комбо:", close: "Закрыть" },
+    en: { online: "Online", daysStreak: "day streak", crystals: "crystals", level: "level", tagline: "AI assistant for learning Kazakh language", welcomeTitle: "Сәлеметсіз бе! 👋", welcomeSubtitle: "Welcome to Qazaq AI — your personal assistant for learning Kazakh language", greetings: "Greetings", traditions: "Traditions", basicPhrases: "Basic Phrases", alphabet: "Alphabet", phraseOfDay: "Phrase of the day", practice: "Practice", inputPlaceholder: "Write a message in Russian or Kazakh...", listening: "Listening...", speakRuOrKz: "Speak in Russian or Kazakh", yourProgress: "Your Progress", messages: "Messages", wordsLearned: "Words learned", dailyGoal: "Daily goal", quickActions: "Quick Actions", translation: "Translate", dictionary: "Dictionary", examples: "Examples", games: "Games", dailyQuests: "Daily Quests", leaderboard: "Leaderboard", you: "You", wordOfDay: "Word of the Day", save: "Save", culture: "Culture", achievements: "Achievements", guide: "Guide", about: "About", yourStats: "📊 Your Statistics", totalTime: "Total time:", avgXPPerDay: "Avg XP/day:", bestDay: "Best day:", maxCombo: "Max combo:", close: "Close" },
+    kk: { online: "Онлайн", daysStreak: "күн қатарынан", crystals: "кристалл", level: "деңгей", tagline: "Қазақ тілін үйренуге арналған AI көмекшісі", welcomeTitle: "Сәлеметсіз бе! 👋", welcomeSubtitle: "Qazaq AI-ге қош келдіңіз — қазақ тілін үйренудегі жеке көмекшіңіз", greetings: "Сәлемдесу", traditions: "Дәстүрлер", basicPhrases: "Негізгі сөз тіркестері", alphabet: "Әліпби", phraseOfDay: "Күннің сөз тіркесі", practice: "Жаттығу", inputPlaceholder: "Орысша немесе қазақша хабарлама жазыңыз...", listening: "Тыңдап тұрмын...", speakRuOrKz: "Орысша немесе қазақша сөйлеңіз", yourProgress: "Сіздің прогресс", messages: "Хабарламалар", wordsLearned: "Үйренілген сөздер", dailyGoal: "Күнделікті мақсат", quickActions: "Жылдам әрекеттер", translation: "Аудару", dictionary: "Сөздік", examples: "Мысалдар", games: "Ойындар", dailyQuests: "Күнделікті тапсырмалар", leaderboard: "Көшбасшылар кестесі", you: "Сіз", wordOfDay: "Күннің сөзі", save: "Сақтау", culture: "Мәдениет", achievements: "Жетістіктер", guide: "Нұсқаулық", about: "Жоба туралы", yourStats: "📊 Сіздің статистика", totalTime: "Барлық уақыт:", avgXPPerDay: "Орташа XP/күн:", bestDay: "Ең жақсы күн:", maxCombo: "Макс. комбо:", close: "Жабу" }
+};
+
+let currentLang = localStorage.getItem('language') || 'ru';
+
+function t(key) {
+    return translations[currentLang][key] || translations['ru'][key] || key;
+}
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('language', lang);
+    updateUILanguage();
+    showNotification(lang === 'ru' ? '🌍 Язык изменен' : lang === 'en' ? '🌍 Language changed' : '🌍 Тіл өзгертілді');
+}
+
+function updateUILanguage() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[currentLang][key]) {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.placeholder = translations[currentLang][key];
+            } else {
+                el.textContent = translations[currentLang][key];
+            }
+        }
+    });
+    
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-lang') === currentLang) {
+            btn.classList.add('active');
+        }
+    });
+    
+    updateStatsDisplay();
+}
+
+function updateStatsDisplay() {
+    const sessionTime = Math.floor((Date.now() - sessionStartTime) / 1000 / 60);
+    const totalHours = Math.floor((totalTimeSpent + sessionTime) / 60);
+    const totalMins = (totalTimeSpent + sessionTime) % 60;
+    const timeUnit = currentLang === 'ru' ? 'ч' : currentLang === 'en' ? 'h' : 'с';
+    const minUnit = currentLang === 'ru' ? 'м' : currentLang === 'en' ? 'm' : 'м';
+    document.getElementById('totalTime').textContent = `${totalHours}${timeUnit} ${totalMins}${minUnit}`;
+    document.getElementById('avgXP').textContent = Math.floor(pointsCount / (streakCount || 1));
+    document.getElementById('bestDay').textContent = `${currentXP} XP`;
+    document.getElementById('maxComboStat').textContent = maxCombo;
+}
+
 let isWaiting=false,messageCount=0,wordsLearned=0,streakCount=0,pointsCount=0,currentXP=0,dailyGoal=50,voiceUsed=false,crystals=100,userLevel=1,levelXP=0,nextLevelXP=100,combo=0,maxCombo=0,lastMessageTime=0,comboTimeout=null,unlockedAchievements=[],activePowerUps=[],dailyRewardDay=1,dailyRewardClaimed=false,totalTimeSpent=0,sessionStartTime=Date.now();
 let questProgress={messages:0,voiceUsed:false,wordsLearned:0,combo:0};
 let recognition=null,isListening=false;
@@ -99,6 +154,6 @@ function rotateTips(){const tipsContainer=document.querySelector('.tip-carousel'
 function updateQuestTimer(){const timerEl=document.getElementById('questTimer');if(!timerEl)return;const now=new Date();const tomorrow=new Date(now);tomorrow.setDate(tomorrow.getDate()+1);tomorrow.setHours(0,0,0,0);const diff=tomorrow-now;const hours=Math.floor(diff/(1000*60*60));const minutes=Math.floor((diff%(1000*60*60))/(1000*60));const seconds=Math.floor((diff%(1000*60))/1000);timerEl.textContent=`${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`}
 
 // INITIALIZATION
-document.addEventListener("DOMContentLoaded",()=>{initParticles();rotateTips();loadProgress();initVoiceRecognition();checkDailyReward();window.addEventListener('beforeunload',saveProgress);setInterval(saveProgress,30000);setInterval(updateQuestTimer,1000);setInterval(updateActivePowerUps,1000);document.addEventListener('keydown',(e)=>{if((e.ctrlKey||e.metaKey)&&e.key==='t'){e.preventDefault();quickTranslate()}if((e.ctrlKey||e.metaKey)&&e.key==='d'){e.preventDefault();quick('Объясни это слово')}if((e.ctrlKey||e.metaKey)&&e.key==='m'){e.preventDefault();toggleVoiceInput()}});console.log("🇰🇿 Qazaq AI готов к работе!");console.log("✨ Горячие клавиши: Ctrl+T (перевод), Ctrl+D (словарь), Ctrl+M (голос)")});
+document.addEventListener("DOMContentLoaded",()=>{initParticles();rotateTips();loadProgress();initVoiceRecognition();checkDailyReward();updateUILanguage();window.addEventListener('beforeunload',saveProgress);setInterval(saveProgress,30000);setInterval(updateQuestTimer,1000);setInterval(updateActivePowerUps,1000);setInterval(updateStatsDisplay,60000);document.addEventListener('keydown',(e)=>{if((e.ctrlKey||e.metaKey)&&e.key==='t'){e.preventDefault();quickTranslate()}if((e.ctrlKey||e.metaKey)&&e.key==='d'){e.preventDefault();quick('Объясни это слово')}if((e.ctrlKey||e.metaKey)&&e.key==='m'){e.preventDefault();toggleVoiceInput()}});console.log("🇰🇿 Qazaq AI готов к работе!");console.log("✨ Горячие клавиши: Ctrl+T (перевод), Ctrl+D (словарь), Ctrl+M (голос)")});
 
 window.QazaqAI={sendMessage,quick,saveWord,speakWord,toggleVoiceInput,addXP,messageCount:()=>messageCount,stats:()=>({messageCount,wordsLearned,streakCount,pointsCount,currentXP,userLevel,crystals,combo})};

@@ -207,6 +207,22 @@
             <div class="tagline">AI-помощник для изучения казахского языка</div>
             <div class="flag-decoration">🇰🇿</div>
         </div>
+
+        <!-- Language Selector (NEW!) -->
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="ru" onclick="changeLanguage('ru')" title="Русский">
+                <span class="lang-flag">🇷🇺</span>
+                <span class="lang-text">RU</span>
+            </button>
+            <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')" title="English">
+                <span class="lang-flag">🇬🇧</span>
+                <span class="lang-text">EN</span>
+            </button>
+            <button class="lang-btn" data-lang="kk" onclick="changeLanguage('kk')" title="Қазақша">
+                <span class="lang-flag">🇰🇿</span>
+                <span class="lang-text">KZ</span>
+            </button>
+        </div>
     </header>
 
     <main class="app">
@@ -538,6 +554,40 @@
                         </svg>
                         Сохранить
                     </button>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Statistics (MOVED from floating widget!) -->
+            <div class="stats-section">
+                <div class="section-header">
+                    <h3>📊 Твоя статистика</h3>
+                    <button class="expand-btn" onclick="toggleSection('statsContent')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="section-content" id="statsContent">
+                    <div class="stats-card">
+                        <div class="stat-row">
+                            <span>Всего времени:</span>
+                            <span id="totalTime">0ч 0м</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Средний XP/день:</span>
+                            <span id="avgXP">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Лучший день:</span>
+                            <span id="bestDay">0 XP</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Макс. комбо:</span>
+                            <span id="maxComboStat">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 

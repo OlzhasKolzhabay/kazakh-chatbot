@@ -4521,3 +4521,132 @@ input::placeholder {
     grid-template-columns: 1fr;
   }
 }
+
+/* ================================
+   LANGUAGE SELECTOR (NEW!)
+   ================================ */
+.language-selector {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-gray);
+}
+
+.lang-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.lang-btn.active {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.lang-flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.lang-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Stats Section (moved to side-panel) */
+.stats-section {
+  margin-bottom: 25px;
+}
+
+.stats-card {
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  border-radius: 15px;
+  padding: 18px;
+}
+
+.stats-card .stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+}
+
+.stats-card .stat-row:last-child {
+  border-bottom: none;
+}
+
+.stats-card .stat-row span:first-child {
+  color: var(--text-gray);
+}
+
+.stats-card .stat-row span:last-child {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Remove old floating stats overlay */
+.stats-overlay {
+  display: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .language-selector {
+    order: -1;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .language-selector {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .lang-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .lang-text {
+    display: none;
+  }
+  
+  .lang-btn {
+    padding: 8px;
+  }
+  
+  .lang-flag {
+    font-size: 24px;
+  }
+}
